@@ -1,6 +1,6 @@
 <h1>Installation</h1><br/>
-Download the latest version from the Releases tab.<br/>Unzip the file.<br/>Drop the StationMDT folder inside your fivepd/plugins folder
-
+Download the latest version from the Releases tab.<br/>Unzip the file.<br/>Drop the StationMDT folder inside your fivepd/plugins folder<br/>
+*Important* DO NOT rename the StationMDT folder or the config file will not load.<br/>
 <h1>Config</h1><br/>
 The config.json file can be edited to change the help text that is displayed when near an mdt location.<br/>
 The input key can be changed as well, but the help text must be updated to reflect the new key.<br/>
