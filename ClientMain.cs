@@ -17,6 +17,7 @@ namespace StationMDT
         private List<Vector3> _mdtLocations;
         private string _helpText;
         private bool _mdtOpen;
+        private int _inputKey;
 
         internal ClientMain() => Init();
 
@@ -28,8 +29,9 @@ namespace StationMDT
 
             _helpText = json["Help_Text"].ToString();
             _mdtLocations = JsonConvert.DeserializeObject<List<Vector3>>(json["MDT_Locations"].ToString());
-            _mdtOpen = false;
+            _inputKey = int.Parse(json["Input_Key"].ToString());
 
+            _mdtOpen = false;
 
             AddTextEntry("MDT:HELP_TEXT", _helpText);
 
@@ -59,7 +61,7 @@ namespace StationMDT
             if(foundMdt)
             {
                 DisplayHelpTextThisFrame("MDT:HELP_TEXT", false);
-                if(Game.IsControlJustPressed(0, Control.Context))
+                if(Game.IsControlJustPressed(0, (Control)_inputKey))
                 {
                     SendNuiMessage("{\"type\":\"FIVEPD::Computer::UI\",\"display\":true}");
                     SetNuiFocus(true, true);
