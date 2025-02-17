@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StationMDT", "StationMDT.csproj", "{90D142E4-A4E2-4A77-9F0C-792519EE1B12}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90D142E4-A4E2-4A77-9F0C-792519EE1B12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90D142E4-A4E2-4A77-9F0C-792519EE1B12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90D142E4-A4E2-4A77-9F0C-792519EE1B12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90D142E4-A4E2-4A77-9F0C-792519EE1B12}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4409307E-76F9-4584-96E8-B40C7801A332}
+	EndGlobalSection
+EndGlobal
