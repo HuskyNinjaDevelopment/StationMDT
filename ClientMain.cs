@@ -40,7 +40,7 @@ namespace StationMDT
                 float y = float.Parse(item["Y"].ToString());
                 float z = float.Parse(item["Z"].ToString());
 
-                bool enabled = bool.Parse(item["Enabled"].ToString());
+                bool enabled = bool.Parse(item["Show_Checkpoint"].ToString());
 
                 _mdtStations.Add( new MDTStation(new Vector3(x, y, z), enabled) );
             }
