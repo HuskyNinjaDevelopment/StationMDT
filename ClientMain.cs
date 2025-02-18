@@ -14,8 +14,8 @@ namespace StationMDT
 {
     internal class ClientMain: Plugin
     {
-        private List<Vector3> _mdtLocations;
-        private Dictionary<Vector3, int> _hasCheckpoint;
+        private List<MDTStation> _mdtStations;
+        private Dictionary<MDTStation, int> _hasCheckpoint;
         private string _helpText;
         private bool _mdtOpen;
         private int _inputKey;
@@ -30,8 +30,21 @@ namespace StationMDT
             string rawJSON = LoadResourceFile(GetCurrentResourceName(), "plugins/StationMDT/config.json");
             var json = JObject.Parse(rawJSON);
 
+            _mdtStations = new List<MDTStation>();
+
             _helpText = json["Help_Text"].ToString();
-            _mdtLocations = JsonConvert.DeserializeObject<List<Vector3>>(json["MDT_Locations"].ToString());
+
+            foreach (var item in json["MDT_Locations"])
+            {
+                float x = float.Parse(item["X"].ToString());
+                float y = float.Parse(item["Y"].ToString());
+                float z = float.Parse(item["Z"].ToString());
+
+                bool enabled = bool.Parse(item["Enabled"].ToString());
+
+                _mdtStations.Add( new MDTStation(new Vector3(x, y, z), enabled) );
+            }
+
             _inputKey = int.Parse(json["Input_Key"].ToString());
 
             r = int.Parse(json["Color"]["R"].ToString());
@@ -45,7 +58,7 @@ namespace StationMDT
             _radius = float.Parse(json["Radius"].ToString());
 
             _mdtOpen = false;
-            _hasCheckpoint = new Dictionary<Vector3, int>();
+            _hasCheckpoint = new Dictionary<MDTStation, int>();
 
             AddTextEntry("MDT:HELP_TEXT", _helpText);
 
@@ -62,21 +75,21 @@ namespace StationMDT
 
             bool foundMdt = false;
 
-            foreach(Vector3 location in _mdtLocations) 
+            foreach(MDTStation station in _mdtStations) 
             {
-                float distance = World.GetDistance(Game.PlayerPed.Position, location);
+                float distance = World.GetDistance(Game.PlayerPed.Position, station.Position);
                 if(distance <= 15f)
                 {
                     //Make Checkpoint
-                    if(!_hasCheckpoint.ContainsKey(location)) 
+                    if(station.UseCheckpoint && !_hasCheckpoint.ContainsKey(station)) 
                     {
-                        float ground = location.Z;
+                        float ground = station.Position.Z;
 
-                        while(!GetGroundZFor_3dCoord(location.X, location.Y, location.Z, ref ground, true)) { await Delay(0); }
-                        int chkpt = CreateCheckpoint(_id, location.X, location.Y, ground, location.X, location.Y, ground, _radius, r, g, b, a, 0);
+                        while(!GetGroundZFor_3dCoord(station.Position.X, station.Position.Y, station.Position.Z, ref ground, true)) { await Delay(0); }
+                        int chkpt = CreateCheckpoint(_id, station.Position.X, station.Position.Y, ground, station.Position.X, station.Position.Y, ground, _radius, r, g, b, a, 0);
                         SetCheckpointCylinderHeight(chkpt, _height, _height, _radius);
 
-                        _hasCheckpoint.Add(location, chkpt);
+                        _hasCheckpoint.Add(station, chkpt);
                     }
 
                     if (distance <= 2f)
@@ -86,12 +99,12 @@ namespace StationMDT
                 }
                 else
                 {
-                    if(_hasCheckpoint.ContainsKey(location))
+                    if(station.UseCheckpoint && _hasCheckpoint.ContainsKey(station))
                     {
-                        int chkpt = _hasCheckpoint[location];
+                        int chkpt = _hasCheckpoint[station];
                         DeleteCheckpoint(chkpt);
 
-                        _hasCheckpoint.Remove(location);
+                        _hasCheckpoint.Remove(station);
                     }
                 }
 
@@ -120,6 +133,18 @@ namespace StationMDT
         {
             _mdtOpen = false;
             SetNuiFocus(false, false);
+        }
+    }
+
+    public class MDTStation
+    {
+        public Vector3 Position { get; set; }
+        public bool UseCheckpoint { get; set; }
+
+        public MDTStation(Vector3 position, bool useCheckpoint)
+        {
+            Position = position;
+            UseCheckpoint = useCheckpoint;
         }
     }
 }
